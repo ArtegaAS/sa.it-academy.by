@@ -1,10 +1,11 @@
+---
 name: Docker Build and Push with Telegram
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [master, md-sa2-33-25]
   pull_request:
-    branches: [ "master" ]
+    branches: [master, md-sa2-33-25]
 
 jobs:
   build:
@@ -38,8 +39,10 @@ jobs:
           MESSAGE="Docker build $STATUS
           Repo: ${{ github.repository }}
           Commit: ${{ github.sha }}
-          Image: ghcr.io/${{ secrets.GHCR_USERNAME }}/flask-app:${{ github.sha }}
+          Image:
+            ghcr.io/${{ secrets.GHCR_USERNAME }}/flask-app:${{ github.sha }}
           Branch: ${{ github.ref_name }}"
-          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          curl -s -X POST \
+            https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
             -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
             -d text="$MESSAGE"
